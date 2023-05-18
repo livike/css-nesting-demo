@@ -1,0 +1,165 @@
+/* establish a layer order up-front, from lowest to highest priority */
+@layer design, demo, nesting;
+
+/* import stylesheets into a layer (dot syntax represents nesting) */
+@import "https://unpkg.com/open-props" layer(design.system);
+@import "https://unpkg.com/open-props/normalize.min.css" layer(design.system);
+
+/* ^^^^ */
+/* detect support for nesting */
+
+.has-nesting {
+	display: none;
+}
+html {
+	& .has-nesting {
+		display: block;
+	}
+	& .no-nesting {
+		display: none;
+	}
+}
+
+.no-support,
+.has-support {
+	background-color: #ff00002b;
+
+	margin: 1em 0em 3em 0em;
+	padding: 0.5em;
+	border: 1px solid #ccc;
+}
+
+.has-support {
+	background-color: #00ff002b;
+}
+
+/* ^^^^ */
+
+/* un-layered styles have the highest priority */
+/* body {
+  background-color: wheat ;
+} */
+
+/* ^^^^^ */
+
+/* adding styles to layers */
+
+/* practice nesting */
+
+@layer nesting.practice {
+  /* Selecting the circles */
+  .demo {
+    & .circle {
+      opacity: .25;
+      filter: blur(25px);
+    }
+  }
+
+  /* Selecting any triangles and squares */
+  /* .demo {
+    & .triangle,
+    & .square {
+      opacity: .25;
+      filter: blur(25px);
+    }
+  } */
+
+  /* .demo {
+    .triangle, .square {
+      opacity: .25;
+      filter: blur(25px);
+    }
+  } */
+
+  /* Selecting large triangles and circles */
+  /* .demo {
+    .lg.triangle,
+    .lg.circle {
+      opacity: .25;
+      filter: blur(25px);
+    }
+  } */
+
+  /* Selecting all the shapes except the pink ones */
+
+  /* .demo {
+    & :not(.pink) {
+      opacity: .25;
+      filter: blur(25px);
+    }
+  }*/
+} 
+
+/* ^^^^^ */
+
+/* Bulding the demo page */
+
+@layer demo {
+  .demo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--size-10), 1fr));
+    grid-auto-rows: var(--size-10);
+    place-items: center;
+    gap: var(--size-3);
+    max-inline-size: var(--size-content-3);
+  }
+  
+  .demo > * {
+    transition: all .5s var(--ease-4);
+  }
+}
+
+@layer demo.shapes {
+  .square {
+    background: var(--color);
+    aspect-ratio: 1;
+    inline-size: var(--size, var(--size-10));
+  } 
+  
+  .circle {
+    background: var(--color);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    inline-size: var(--size, var(--size-10));
+  } 
+  
+  .triangle {
+    aspect-ratio: 1; 
+    border-inline: calc(var(--size) / 2) solid transparent;
+    border-block-end: calc(var(--size) / 1.25) solid var(--color);
+  } 
+}
+
+@layer demo.sizes {
+  .sm { --size: var(--size-6) }
+  .lg { --size: var(--size-14); z-index: -1; }
+}
+
+@layer demo.colors {
+  .blue   { --color: cyan } 
+  .pink   { --color: magenta } 
+  .purple { --color: rebeccapurple } 
+}
+
+@layer demo.support {
+  /* put thing to the center of the page */
+  body {
+    display: grid;
+    place-content: center;
+    padding: var(--size-5);
+    gap: var(--size-5);
+  } 
+
+  /* ^^^^^ */
+
+  /* do the same centering with flex */
+  /* body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: var(--size-5);
+    gap: var(--size-5);
+  }  */
+}
+
